@@ -1,0 +1,740 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.Master.cs" Inherits="LMS.Student.Site1" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Portal - LMS</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #059669;
+            --primary-hover: #047857;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #06b6d4;
+            --background-color: #f0fdf4;
+            --card-bg: #ffffff;
+            --text-primary: #14532d;
+            --text-secondary: #64748b;
+            --border-color: #d1fae5;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --transition-base: all 0.2s ease-in-out;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        /* Sidebar Styles */
+        .student-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+            color: #ffffff;
+            z-index: 1000;
+            transition: var(--transition-base);
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+        }
+
+        .student-sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-logo {
+            font-size: 1.25rem;
+            font-weight: var(--font-weight-bold);
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav-item {
+            list-style: none;
+            margin: 0.25rem 0;
+        }
+
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition-base);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: var(--font-weight-medium);
+            border-radius: 0 25px 25px 0;
+            margin-right: 0.5rem;
+        }
+
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav-link i {
+            margin-right: 0.875rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .student-sidebar.collapsed .sidebar-nav-link span {
+            display: none;
+        }
+
+        .student-sidebar.collapsed .sidebar-nav-link i {
+            margin-right: 0;
+        }
+
+        .student-sidebar.collapsed .sidebar-logo span {
+            display: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            transition: var(--transition-base);
+            min-height: 100vh;
+            background: var(--background-color);
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
+        }
+
+        .content-wrapper {
+            padding: 2rem;
+            max-width: 100%;
+        }
+
+        /* Top Navigation */
+        .student-navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition-base);
+        }
+
+        .menu-toggle:hover {
+            background-color: var(--background-color);
+            color: var(--text-primary);
+        }
+
+        .student-welcome {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: var(--font-weight-bold);
+            font-size: 1.1rem;
+        }
+
+        .student-info h5 {
+            margin: 0;
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .student-info p {
+            margin: 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+
+        /* Page Content */
+        .page-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title i {
+            color: var(--primary-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .stat-info h4 {
+            margin: 0;
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+        }
+
+        .stat-info p {
+            margin: 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .student-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .student-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+
+            .overlay.show {
+                display: block;
+            }
+
+            .student-navbar {
+                padding: 1rem;
+                border-radius: 0;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+            }
+
+            .page-container {
+                padding: 1.5rem;
+                border-radius: var(--border-radius);
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .page-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-indicator {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .student-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .student-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .student-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .student-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Focus States */
+        .sidebar-nav-link:focus,
+        .menu-toggle:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: var(--font-weight-bold);
+        }
+    </style>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Sidebar -->
+        <aside class="student-sidebar" id="studentSidebar">
+            <div class="sidebar-header">
+                <a href="Dashboard.aspx" class="sidebar-logo">
+                    <i class="bi bi-book-half"></i>
+                    <span>Student Portal</span>
+                </a>
+                <button type="button" class="menu-toggle d-none d-md-block" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="list-unstyled">
+                    <li class="sidebar-nav-item">
+                        <a href="Dashboard.aspx" class="sidebar-nav-link" id="navDashboard">
+                            <i class="bi bi-house-door"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Courses.aspx" class="sidebar-nav-link" id="navCourses">
+                            <i class="bi bi-book"></i>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Assignments.aspx" class="sidebar-nav-link" id="navAssignments">
+                            <i class="bi bi-pencil-square"></i>
+                            <span>Assignments</span>
+                            <span class="notification-badge" id="assignmentBadge" style="display: none;">3</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Resources.aspx" class="sidebar-nav-link" id="navResources">
+                            <i class="bi bi-folder"></i>
+                            <span>Resources</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Quizzes.aspx" class="sidebar-nav-link" id="navQuizzes">
+                            <i class="bi bi-question-circle"></i>
+                            <span>Quizzes</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="GradeBook.aspx" class="sidebar-nav-link" id="navGradeBook">
+                            <i class="bi bi-graph-up"></i>
+                            <span>Grade Book</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Settings.aspx" class="sidebar-nav-link" id="navSettings">
+                            <i class="bi bi-gear"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="Logout.aspx" class="sidebar-nav-link" id="navLogout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Mobile Overlay -->
+        <div class="overlay d-md-none" id="sidebarOverlay"></div>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Navigation -->
+            <nav class="student-navbar">
+                <div class="navbar-content">
+                    <div class="navbar-left">
+                        <button type="button" class="menu-toggle d-md-none me-3" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <div class="student-welcome">
+                            <div class="student-avatar">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="student-info">
+                                <h5><asp:Label ID="lblUserName" runat="server" Text="Welcome, Student"/></h5>
+                                <p>Track your learning progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar-right">
+                        <div class="progress-indicator">
+                            <i class="bi bi-trophy text-success"></i>
+                            <div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <div class="progress-text">75% Complete</div>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-link text-decoration-none dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical fs-5"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="Settings.aspx"><i class="bi bi-gear me-2"></i>Profile Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="Logout.aspx"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Quick Stats -->
+            <div class="content-wrapper">
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <asp:Label ID="lblenrolledCourses" runat="server" Text="0"></asp:Label>
+                            <p>Enrolled Courses</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <div class="stat-info">
+                            <asp:Label ID="lblpendingAssignments" runat="server" Text="0"></asp:Label>
+                            <p>Pending Assignments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <asp:Label ID="lblaverageGrade" runat="server" Text="0"></asp:Label>
+                            <p>Average Grade</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <asp:Label ID="lblcompletedCourses" runat="server" Text="0"></asp:Label>
+                            <p>Completed Courses</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container fade-in">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Custom JavaScript -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebar = document.getElementById('studentSidebar');
+                const mainContent = document.getElementById('mainContent');
+                const overlay = document.getElementById('sidebarOverlay');
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+
+                // Desktop sidebar toggle
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener('click', function() {
+                        sidebar.classList.toggle('collapsed');
+                        mainContent.classList.toggle('expanded');
+                    });
+                }
+
+                // Mobile sidebar toggle
+                if (mobileMenuToggle) {
+                    mobileMenuToggle.addEventListener('click', function() {
+                        sidebar.classList.toggle('show');
+                        overlay.classList.toggle('show');
+                    });
+                }
+
+                // Close sidebar when clicking overlay
+                if (overlay) {
+                    overlay.addEventListener('click', function() {
+                        sidebar.classList.remove('show');
+                        overlay.classList.remove('show');
+                    });
+                }
+
+                // Highlight active navigation item
+                const currentPage = window.location.pathname.split('/').pop();
+                const navLinks = document.querySelectorAll('.sidebar-nav-link');
+
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentPage) {
+                        link.classList.add('active');
+                    }
+                });
+
+                // Close mobile sidebar when clicking a nav link
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth < 768) {
+                            sidebar.classList.remove('show');
+                            overlay.classList.remove('show');
+                        }
+                    });
+                });
+
+                // Add loading state to forms
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function() {
+                        this.classList.add('loading');
+                    });
+                });
+
+                // Update progress bar dynamically (you can connect this to real data)
+                updateProgressBar();
+
+                function updateProgressBar() {
+                    // This could be connected to actual student progress data
+                    const progressFill = document.querySelector('.progress-fill');
+                    if (progressFill) {
+                        // Example: Set progress based on some calculation
+                        const progress = 75; // This could come from server-side data
+                        progressFill.style.width = progress + '%';
+                        document.querySelector('.progress-text').textContent = progress + '% Complete';
+                    }
+                }
+            });
+        </script>
+    </form>
+</body>
+</html>

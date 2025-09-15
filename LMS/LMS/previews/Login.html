@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LMS Login</title>
+    <link rel="stylesheet" href="../main.css" />
+    <link rel="stylesheet" href="../bootstrap-compat.css" />
+    <style>
+      body {
+        background: url("../Image/download.jpeg") no-repeat center center fixed;
+        background-size: cover;
+      }
+      .login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 0 10px #ccc;
+      }
+      .logo {
+        display: block;
+        margin: 0 auto 20px auto;
+        max-width: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container text-center">
+      <img src="../Image/uew_logo.png" alt="LMS Logo" class="logo" />
+      <h3 class="mb-4">LMS Login</h3>
+      <div id="error-message" class="text-danger mb-3" style="display: none">
+        Invalid credentials
+      </div>
+      <form>
+        <div class="mb-3">
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            placeholder="Username"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
